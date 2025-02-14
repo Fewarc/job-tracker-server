@@ -3,7 +3,7 @@ import { extendType, objectType } from "nexus";
 export const User = objectType({
   name: "User",
   definition(t) {
-    t.id("id");
+    t.int("id");
     t.string("name");
   },
 });
@@ -13,8 +13,8 @@ export const UserQuery = extendType({
   definition(t) {
     t.list.field("users", {
       type: "User",
-      resolve: () => {
-        return [{ id: "1", name: "Username" }];
+      resolve: (_, __, context) => {
+        return context.db.user.findMany({ where: { id: { in: [1, 2, 3] } } });
       },
     });
   },
