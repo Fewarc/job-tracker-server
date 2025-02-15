@@ -1,9 +1,12 @@
+import { User } from "@prisma/client";
 import { createTestContext } from "./__helpers";
 
 const ctx = createTestContext();
 
+const TEST_USERNAME = "create_user_test_username";
+
 it("ensures that user can be craeted", async () => {
-  const userCreateResult = await ctx.client.request(
+  const userCreateResult: { createUser: User } = await ctx.client.request(
     `
     mutation CreateUser($username: String!) {
       createUser(username: $username) {
@@ -11,14 +14,17 @@ it("ensures that user can be craeted", async () => {
         name
       }
     }`,
-    { username: "create_user_test" }
+    { username: TEST_USERNAME }
   );
+
+  expect(userCreateResult.createUser.id).not.toBeNull();
+  expect(userCreateResult.createUser.name).toBe(TEST_USERNAME);
 
   expect(userCreateResult).toMatchInlineSnapshot(`
 {
   "createUser": {
-    "id": null,
-    "name": "create_user_test",
+    "id": 15,
+    "name": "create_user_test_username",
   },
 }
 `);

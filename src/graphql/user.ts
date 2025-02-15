@@ -23,21 +23,22 @@ export const UserQuery = extendType({
 export const UserMutation = extendType({
   type: "Mutation",
   definition(t) {
-    t.field("createUser", {
+    t.nullable.field("createUser", {
       type: "User",
       args: {
         username: nonNull(stringArg()),
       },
       resolve: async (_root, args, context) => {
-        const user = { name: args.username };
+        let user = null;
 
         try {
-          await context.db.user.create({ data: user });
+          user = await context.db.user.create({
+            data: { name: args.username },
+          });
         } catch (error) {
           console.error(error);
         }
 
-        console.log("got here: ", user);
         return user;
       },
     });
