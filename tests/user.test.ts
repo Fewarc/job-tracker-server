@@ -1,30 +1,42 @@
 import { User } from "@prisma/client";
 import { createTestContext } from "./__helpers";
+import bcrypt from "bcrypt";
 
 const ctx = createTestContext();
 
-const TEST_USERNAME = "create_user_test_username";
+const TEST_USERNAME = "signup_user_name";
+const TEST_EMAIL = "signup_user_email" + new Date().getTime();
+const TEST_PASSWORD = "signup_user_password";
 
 it("ensures that user can be craeted", async () => {
-  const userCreateResult: { createUser: User } = await ctx.client.request(
-    `
-    mutation CreateUser($username: String!) {
-      createUser(username: $username) {
-        id,
-        name
-      }
-    }`,
-    { username: TEST_USERNAME }
-  );
+  const userSignupResult: { signupUser: User & { jwt: string } } =
+    await ctx.client.request(
+      `
+    mutation SignupUser($name: String!, $email: String!, $password: String!) {
+    signupUser(name: $name, email: $email, password: $password) {
+      id
+      name
+      email
+      jwt
+    }
+  }`,
+      { name: TEST_USERNAME, email: TEST_EMAIL, password: TEST_PASSWORD }
+    );
 
-  expect(userCreateResult.createUser.id).not.toBeNull();
-  expect(userCreateResult.createUser.name).toBe(TEST_USERNAME);
+  console.log(userSignupResult);
 
-  expect(userCreateResult).toMatchInlineSnapshot(`
+  expect(userSignupResult.signupUser.id).not.toBeNull();
+  expect(userSignupResult.signupUser.name).toBe(TEST_USERNAME);
+  expect(userSignupResult.signupUser.email).toBe(TEST_EMAIL);
+  expect(userSignupResult.signupUser.jwt).not.toBeNull();
+
+  expect(userSignupResult).toMatchInlineSnapshot(`
 {
-  "createUser": {
-    "id": 15,
-    "name": "create_user_test_username",
+  "signupUser": {
+    "email": "signup_user_email1739733933857",
+    "id": 12,
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Mzk3MzM5MzV9.ntIyYPwxdfHX8sbktE2EWYZWrrSLvLe-_ccuDxEZBaA",
+    "name": "signup_user_name",
   },
 }
 `);
