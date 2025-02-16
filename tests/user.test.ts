@@ -1,6 +1,5 @@
 import { User } from "@prisma/client";
 import { createTestContext } from "./__helpers";
-import bcrypt from "bcrypt";
 
 const ctx = createTestContext();
 
