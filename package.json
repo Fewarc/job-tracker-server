@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --transpile-only --no-notify src/index.ts",
     "build": "tsc",
     "generate": "ts-node --transpile-only src/schema.ts",
-    "test": "pnpm run generate && jest -u --config jest.config.js"
+    "test": "pnpm run generate && jest -u --config jest.config.js",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

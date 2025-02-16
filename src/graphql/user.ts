@@ -1,4 +1,4 @@
-import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { NexusGenObjects } from "../../nexus-typegen";
@@ -9,17 +9,35 @@ export const UserType = objectType({
     t.int("id");
     t.string("name");
     t.string("email");
-    t.string("jwt");
+    t.nullable.string("jwt");
   },
 });
 
 export const UserQuery = extendType({
   type: "Query",
   definition(t) {
-    t.list.field("users", {
+    t.nullable.field("findUser", {
       type: "User",
-      resolve: (_root, _args, context) => {
-        return context.db.user.findMany({ where: { id: { in: [1, 2] } } });
+      args: {
+        id: nonNull(intArg()),
+      },
+      resolve: async (_root, args, context) => {
+        let user: NexusGenObjects["User"] | null = null;
+
+        const foundUser = await context.db.user.findUnique({
+          where: { id: args.id },
+        });
+
+        if (foundUser) {
+          user = {
+            id: foundUser.id,
+            name: foundUser.name,
+            email: foundUser.email,
+            jwt: null,
+          };
+        }
+
+        return user;
       },
     });
   },
@@ -101,6 +119,40 @@ export const UserMutation = extendType({
           name: foundUser.name,
           email: foundUser.email,
           jwt: token,
+        };
+
+        return user;
+      },
+    });
+    t.nullable.field("deleteUser", {
+      type: "User",
+      args: {
+        id: nonNull(intArg()),
+      },
+      resolve: async (_root, args, context) => {
+        let user: NexusGenObjects["User"] | null = null;
+
+        const foundUser = await context.db.user.findUnique({
+          where: { id: args.id },
+        });
+
+        if (!foundUser) {
+          throw new Error("User not found");
+        }
+
+        try {
+          await context.db.user.delete({ where: { id: foundUser.id } });
+        } catch (error) {
+          throw new Error(
+            `Error occured while trying to delete user: ${error}`
+          );
+        }
+
+        user = {
+          id: foundUser.id,
+          name: foundUser.name,
+          email: foundUser.email,
+          jwt: null,
         };
 
         return user;
