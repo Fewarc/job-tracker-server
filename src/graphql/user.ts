@@ -1,7 +1,7 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "@prisma/client";
+import { NexusGenObjects } from "../../nexus-typegen";
 
 export const UserType = objectType({
   name: "User",
@@ -36,23 +36,74 @@ export const UserMutation = extendType({
         password: nonNull(stringArg()),
       },
       resolve: async (_root, args, context) => {
-        let user: User | null = null;
-        let token;
+        let user: NexusGenObjects["User"] | null = null;
 
         try {
           const { name, email, password } = args;
           const hashedPassword = await bcrypt.hash(password, 10);
 
-          user = await context.db.user.create({
+          const createdUser = await context.db.user.create({
             data: { name, email, password: hashedPassword },
           });
 
-          token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!);
+          const token = jwt.sign(
+            { userId: createdUser.id },
+            process.env.APP_SECRET!
+          );
+
+          user = {
+            id: createdUser.id,
+            name: createdUser.name,
+            email: createdUser.email,
+            jwt: token,
+          };
         } catch (error) {
-          console.error(error);
+          throw new Error(
+            `Error occured while trying to create new user: ${error}`
+          );
         }
 
-        return { ...user, jwt: token };
+        return user;
+      },
+    });
+    t.nullable.field("loginUser", {
+      type: "User",
+      args: {
+        name: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+      },
+      resolve: async (_root, args, context) => {
+        const { email, name, password } = args;
+        let user: NexusGenObjects["User"] | null = null;
+
+        const foundUser = await context.db.user.findUnique({
+          where: { email, name },
+        });
+
+        if (!foundUser) {
+          throw new Error("User not found");
+        }
+
+        const passwordValid = bcrypt.compare(password, foundUser.password);
+
+        if (!passwordValid) {
+          throw new Error("Invalid password");
+        }
+
+        const token = jwt.sign(
+          { userId: foundUser.id },
+          process.env.APP_SECRET!
+        );
+
+        user = {
+          id: foundUser.id,
+          name: foundUser.name,
+          email: foundUser.email,
+          jwt: token,
+        };
+
+        return user;
       },
     });
   },

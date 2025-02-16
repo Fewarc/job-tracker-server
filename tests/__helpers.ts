@@ -20,10 +20,11 @@ function graphqlTestContext() {
       // get random port
       const port = await getPort({ port: makeRange(4000, 6000) });
 
+      console.log("TEST SERVER STARTED AT PORT: ", `http://localhost:${port}`);
       // start server
       serverInstance = await server.listen({ port });
 
-      // add pre-configured graphql client to the test context
+      // add pre-configured graphql client
       return new GraphQLClient(`http://localhost:${port}`);
     },
     async after() {
@@ -39,19 +40,32 @@ function graphqlTestContext() {
  * @returns { TestContext }
  */
 export function createTestContext(): TestContext {
-  let ctx = {} as TestContext;
+  const ctx = {} as TestContext;
   const graphqlCtx = graphqlTestContext();
 
-  // run before each test
-  beforeEach(async () => {
+  // // run before each test
+  // beforeEach(async () => {
+  //   const client = await graphqlCtx.before();
+  //   Object.assign(ctx, {
+  //     client,
+  //   });
+  // });
+
+  // // run after each test
+  // afterEach(async () => {
+  //   await graphqlCtx.after();
+  // });
+
+  // run before all tests
+  beforeAll(async () => {
     const client = await graphqlCtx.before();
     Object.assign(ctx, {
       client,
     });
   });
 
-  // run after each test
-  afterEach(async () => {
+  // run after all tests
+  afterAll(async () => {
     await graphqlCtx.after();
   });
 
