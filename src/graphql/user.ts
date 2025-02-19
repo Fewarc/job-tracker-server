@@ -102,7 +102,10 @@ export const UserMutation = extendType({
           throw new Error("User not found");
         }
 
-        const passwordValid = bcrypt.compare(password, foundUser.password);
+        const passwordValid = await bcrypt.compare(
+          password,
+          foundUser.password
+        );
 
         if (!passwordValid) {
           throw new Error("Invalid password");

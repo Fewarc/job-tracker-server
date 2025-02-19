@@ -1,7 +1,7 @@
 import { ServerInfo } from "apollo-server";
 import getPort, { makeRange } from "get-port";
 import { GraphQLClient } from "graphql-request";
-import { server } from "../src/server";
+import { testServer } from "../src/server";
 
 type TestContext = {
   client: GraphQLClient;
@@ -22,7 +22,7 @@ function graphqlTestContext() {
 
       console.log("TEST SERVER STARTED AT PORT: ", `http://localhost:${port}`);
       // start server
-      serverInstance = await server.listen({ port });
+      serverInstance = await testServer.listen({ port });
 
       // add pre-configured graphql client
       return new GraphQLClient(`http://localhost:${port}`);

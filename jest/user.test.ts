@@ -39,9 +39,9 @@ it("ensures that user can be craeted", async () => {
   expect(userSignupResult).toMatchInlineSnapshot(`
 {
   "signupUser": {
-    "email": "signup_user_email1739993426953",
-    "id": 6,
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImlhdCI6MTczOTk5MzQyOH0.x42-eEYUDQd2-GoFGkUmD6j8q6pONZ7wFpt4MlTFtqQ",
+    "email": "signup_user_email1740004001859",
+    "id": 8,
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjgsImlhdCI6MTc0MDAwNDAwM30.i1xBOiFY70dNOFIdEozvRnYpQxJ0GWcTdH-nQEg2NMM",
     "name": "signup_user_name",
   },
 }
@@ -52,16 +52,16 @@ it("ensures that previously created user can log in", async () => {
   const userLoginResult: NexusGenFieldTypes["Mutation"] =
     await ctx.client.request(
       `
-    mutation LoginUser($name: String!, $email: String!, $password: String!) {
-  loginUser(name: $name, email: $email, password: $password) {
+    mutation LoginUser($email: String!, $password: String!) {
+  loginUser(email: $email, password: $password) {
     id
     name
     email
     jwt
   }
-}`,
+}
+  `,
       {
-        name: SIGNUP_TEST_USERNAME,
         email: SIGNUP_TEST_EMAIL,
         password: SIGNUP_TEST_PASSWORD,
       }
@@ -75,9 +75,9 @@ it("ensures that previously created user can log in", async () => {
   expect(userLoginResult).toMatchInlineSnapshot(`
 {
   "loginUser": {
-    "email": "signup_user_email1739993426953",
-    "id": 6,
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImlhdCI6MTczOTk5MzQyOH0.x42-eEYUDQd2-GoFGkUmD6j8q6pONZ7wFpt4MlTFtqQ",
+    "email": "signup_user_email1740004001859",
+    "id": 8,
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjgsImlhdCI6MTc0MDAwNDAwM30.i1xBOiFY70dNOFIdEozvRnYpQxJ0GWcTdH-nQEg2NMM",
     "name": "signup_user_name",
   },
 }
@@ -97,7 +97,8 @@ it("ensures that previously created user can be deleted", async () => {
     email
     jwt
   }
-}`,
+}
+  `,
       {
         deleteUserId: signupTestUserId,
       }
@@ -111,8 +112,8 @@ it("ensures that previously created user can be deleted", async () => {
   expect(userDeleteResult).toMatchInlineSnapshot(`
 {
   "deleteUser": {
-    "email": "signup_user_email1739993426953",
-    "id": 6,
+    "email": "signup_user_email1740004001859",
+    "id": 8,
     "jwt": null,
     "name": "signup_user_name",
   },
@@ -146,16 +147,17 @@ it("ensures that any user can log in", async () => {
   const userLoginResult: NexusGenFieldTypes["Mutation"] =
     await ctx.client.request(
       `
-    mutation LoginUser($name: String!, $email: String!, $password: String!) {
-  loginUser(name: $name, email: $email, password: $password) {
+    mutation LoginUser($email: String!, $password: String!) {
+  loginUser(email: $email, password: $password) {
     id
     name
     email
     jwt
   }
-}`,
+}
+
+  `,
       {
-        name: LOGIN_TEST_USERNAME,
         email: LOGIN_TEST_EMAIL,
         password: LOGIN_TEST_PASSWORD,
       }
@@ -171,7 +173,7 @@ it("ensures that any user can log in", async () => {
   "loginUser": {
     "email": "test_user_email",
     "id": 5,
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTczOTk5MzQyOX0.Z6XFZ5EisNoLCMr0aJsR1tAQmtZQk41kql1954veTyc",
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTc0MDAwNDAwNH0.ddkUca0UI1QVIo2iWLgEV8KZ66FMuKNYnOaB70LAPFY",
     "name": "test_user_name",
   },
 }
