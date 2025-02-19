@@ -39,9 +39,9 @@ it("ensures that user can be craeted", async () => {
   expect(userSignupResult).toMatchInlineSnapshot(`
 {
   "signupUser": {
-    "email": "signup_user_email1739740300208",
-    "id": 39,
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM5LCJpYXQiOjE3Mzk3NDAzMDF9.0jmjclMNixKoOZENMsSW6yzSx5Ji-cDeF0_u2Xhwy7Y",
+    "email": "signup_user_email1739993426953",
+    "id": 6,
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImlhdCI6MTczOTk5MzQyOH0.x42-eEYUDQd2-GoFGkUmD6j8q6pONZ7wFpt4MlTFtqQ",
     "name": "signup_user_name",
   },
 }
@@ -75,9 +75,9 @@ it("ensures that previously created user can log in", async () => {
   expect(userLoginResult).toMatchInlineSnapshot(`
 {
   "loginUser": {
-    "email": "signup_user_email1739740300208",
-    "id": 39,
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM5LCJpYXQiOjE3Mzk3NDAzMDF9.0jmjclMNixKoOZENMsSW6yzSx5Ji-cDeF0_u2Xhwy7Y",
+    "email": "signup_user_email1739993426953",
+    "id": 6,
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImlhdCI6MTczOTk5MzQyOH0.x42-eEYUDQd2-GoFGkUmD6j8q6pONZ7wFpt4MlTFtqQ",
     "name": "signup_user_name",
   },
 }
@@ -111,8 +111,8 @@ it("ensures that previously created user can be deleted", async () => {
   expect(userDeleteResult).toMatchInlineSnapshot(`
 {
   "deleteUser": {
-    "email": "signup_user_email1739740300208",
-    "id": 39,
+    "email": "signup_user_email1739993426953",
+    "id": 6,
     "jwt": null,
     "name": "signup_user_name",
   },
@@ -170,8 +170,8 @@ it("ensures that any user can log in", async () => {
 {
   "loginUser": {
     "email": "test_user_email",
-    "id": 0,
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjAsImlhdCI6MTczOTc0MDMwMn0.FckHLgFVzMZihmMSk1gc0U_fYULZ5pxAHlpkIDKjWjg",
+    "id": 5,
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTczOTk5MzQyOX0.Z6XFZ5EisNoLCMr0aJsR1tAQmtZQk41kql1954veTyc",
     "name": "test_user_name",
   },
 }

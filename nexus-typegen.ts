@@ -89,7 +89,6 @@ export interface NexusGenArgTypes {
     }
     loginUser: { // args
       email: string; // String!
-      name: string; // String!
       password: string; // String!
     }
     signupUser: { // args

@@ -1,5 +1,5 @@
 import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NexusGenObjects } from "../../nexus-typegen";
 
@@ -87,16 +87,15 @@ export const UserMutation = extendType({
     t.nullable.field("loginUser", {
       type: "User",
       args: {
-        name: nonNull(stringArg()),
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
       },
       resolve: async (_root, args, context) => {
-        const { email, name, password } = args;
+        const { email, password } = args;
         let user: NexusGenObjects["User"] | null = null;
 
         const foundUser = await context.db.user.findUnique({
-          where: { email, name },
+          where: { email },
         });
 
         if (!foundUser) {
